@@ -47,6 +47,7 @@ namespace AsepriteImporter.Importers {
 
         private void BuildAtlas(string acePath) {
             fileName = Path.GetFileNameWithoutExtension(acePath);
+            fileName = RemoveSuffixPreffix(fileName);
             directoryName = Path.GetDirectoryName(acePath) + "/" + fileName;
             if (!AssetDatabase.IsValidFolder(directoryName)) {
                 AssetDatabase.CreateFolder(Path.GetDirectoryName(acePath), fileName);
@@ -62,6 +63,33 @@ namespace AsepriteImporter.Importers {
             } catch (Exception e) {
                 Debug.LogError(e.Message);
             }
+        }
+
+        private string RemoveSuffixPreffix(string t)
+        {
+            string[] parts = t.Split('_');
+
+            if(parts.Length <= 1)
+            {
+                Debug.LogError("Not following filename structure!");
+                return t;
+            }
+            else
+            {
+                string final = "";
+
+                // we ommit type preffix and version suffix
+                //
+                for(int i = 1; i < parts.Length - 1; i++)
+                {
+                    string word = parts[i];
+
+                    final += word[0].ToUpper();
+                    final += word.Substring(1);
+                } 
+
+                return final;
+            }  
         }
 
         public Texture2D GenerateAtlas(Texture2D []sprites) {
@@ -160,7 +188,7 @@ namespace AsepriteImporter.Importers {
             var index = 0;
             var height = rows * (size.y + padding * 2);
             var done = false;
-            var count10 = frames.Length >= 100 ? 3 : (frames.Length >= 10 ? 2 : 1);
+            //var count10 = frames.Length >= 100 ? 3 : (frames.Length >= 10 ? 2 : 1);
 
             for (var row = 0; row < rows; row++) {
                 for (var col = 0; col < cols; col++) {
@@ -169,7 +197,7 @@ namespace AsepriteImporter.Importers {
                                          size.x,
                                          size.y);
                     var meta = new SpriteMetaData();
-                    meta.name = fileName + index.ToString("D" + count10);
+                    meta.name = fileName + "_" + index.ToString("D1");
                     meta.rect = rect;
                     meta.alignment = Settings.spriteAlignment;
                     meta.pivot = Settings.spritePivot;
@@ -240,7 +268,7 @@ namespace AsepriteImporter.Importers {
                 }
 
                 clip.name = fileName + "_" + animation.TagName;
-                clip.frameRate = 25;
+                clip.frameRate = 1000;
 
                 EditorCurveBinding editorBinding = new EditorCurveBinding();
                 editorBinding.path = "";
