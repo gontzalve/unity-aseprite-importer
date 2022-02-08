@@ -84,7 +84,7 @@ namespace AsepriteImporter.Importers {
                 {
                     string word = parts[i];
 
-                    final += word[0].ToUpper();
+                    final += char.ToUpper(word[0]);
                     final += word.Substring(1);
                 } 
 
