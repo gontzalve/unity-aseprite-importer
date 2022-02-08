@@ -220,7 +220,7 @@ namespace AsepriteImporter.Importers {
 
         private void GeneratorAnimations() {
             var sprites = GetAllSpritesFromAssetFile(filePath);
-            sprites.Sort((lhs, rhs) => String.CompareOrdinal(lhs.name, rhs.name));
+            //sprites.Sort((lhs, rhs) => String.CompareOrdinal(lhs.name, rhs.name));
 
             var clips = GenerateAnimations(AsepriteFile, sprites);
             if (Settings.buildAtlas) {
